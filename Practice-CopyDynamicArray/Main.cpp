@@ -2,57 +2,75 @@
 using namespace std;
 
 
-void fill_arr(int* const arr, const int SIZE)
+class MyClass
 {
-	srand(SIZE);
+private:
 
-	for (int i = 0; i < SIZE; i++)
+	int* arr;
+	int size;
+
+public:
+
+	MyClass(int size = 10)
 	{
-		arr[i] = rand() % 11;
+		this->size = size;
+
+		arr = new int[size];
+
+		for (int i = 0; i < size; i++)
+		{
+			arr[i] = rand() % 11;
+		}
 	}
-}
 
-void print_arr(const int* arr, const int SIZE)
-{
-	for (int i = 0; i < SIZE; i++)
+
+	~MyClass()
 	{
-		cout << arr[i] << " ";
+		delete[] arr;
+		size = 0;
 	}
-	cout << endl;
-}
 
 
-void copy_arr(int*& arr1, const int* arr2, const int size2)
-{
-	delete[] arr1;
-	arr1 = new int[size2];
-
-	for (int i = 0; i < size2; i++)
+	void print_arr()
 	{
-		arr1[i] = arr2[i];
+		for (int i = 0; i < size; i++)
+		{
+			cout << arr[i] << " ";
+		}
+		cout << endl;
+	}
+
+	friend void copy_arr(MyClass& a, MyClass& b);
+};
+
+
+void copy_arr(MyClass& a, MyClass& b)
+{
+	a.size = b.size;
+	delete[] a.arr;
+
+	a.arr = new int[a.size];
+
+	for (int i = 0; i < a.size; i++)
+	{
+		a.arr[i] = b.arr[i];
 	}
 }
 
 
 int main()
 {
-	int size1 = 5, size2 = 10;
+	srand(time(0));
 
-	int* p1 = new int[size1];
-	fill_arr(p1, size1);
-	int* p2 = new int[size2];
-	fill_arr(p2, size2);
+	MyClass a(5);
+	MyClass b(10);
 
-	cout << "p1 = ";
-	print_arr(p1, size1);
-	cout << "p2 = ";
-	print_arr(p2, size2);
+	a.print_arr();
+	b.print_arr();
 
-	copy_arr(p1, p2, size2);
 	cout << "==============" << endl;
+	copy_arr(a, b);
 
-	cout << "p1 = ";
-	print_arr(p1, size2);
-	cout << "p2 = ";
-	print_arr(p2, size2);
+	a.print_arr();
+	b.print_arr();
 }
